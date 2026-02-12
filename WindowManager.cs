@@ -87,6 +87,23 @@ public class WindowManager
         _overlay.Hide();
     }
 
+    /// <summary>
+    /// 切换 Overlay 显示状态：如果已显示则隐藏（模拟 Esc），否则显示。
+    /// </summary>
+    public void ToggleOverlay()
+    {
+        if (_overlay.IsVisible)
+        {
+            Debug.WriteLine("[WindowManager] Overlay 已显示，执行隐藏（模拟 Esc）");
+            HideOverlay();
+            // HideOverlay 触发 IsVisibleChanged -> 自动 RestorePreviousWindow
+        }
+        else
+        {
+            ShowOverlay();
+        }
+    }
+
     // ========== 私有方法 ==========
 
     private async void OnInputSubmitted(string text)

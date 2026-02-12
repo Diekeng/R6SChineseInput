@@ -151,7 +151,7 @@ public partial class App : System.Windows.Application
                     if (MainWindow is MainWindow mw)
                         mw.AppendLog(message);
 
-                    _windowManager?.ShowOverlay();
+                    _windowManager?.ToggleOverlay();
                 });
             }
         }
