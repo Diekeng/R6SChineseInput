@@ -1,6 +1,6 @@
 # R6SChineseInput (R6S 中文输入辅助工具)
 
-![Preview](https://llwiki.org/mediawiki/img_auth.php/thumb/2/2b/Kasumi_img_Anime_KV2.png/405px-Kasumi_img_Anime_KV2.png)
+<img src="bg.png" width="400" alt="Preview"/>
 
 一个专门为类似《彩虹六号：围攻》(Rainbow Six Siege) 这样的全屏独占游戏设计的中文输入辅助工具。解决了在某些游戏中无法调出系统输入法候选框、或者游戏原生输入限制导致的输入法无法正常工作的问题。
 
