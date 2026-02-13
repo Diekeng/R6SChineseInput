@@ -38,6 +38,21 @@ public class AppConfig
     public string HotkeyName { get; set; } = "`";
 
     /// <summary>
+    /// 文本发送失败时的重试次数（默认 3 次）。
+    /// </summary>
+    public int RetryCount { get; set; } = 3;
+
+    /// <summary>
+    /// 每次重试之间的等待时间（毫秒，默认 100ms）。
+    /// </summary>
+    public int RetryDelayMs { get; set; } = 100;
+
+    /// <summary>
+    /// 焦点归还后、发送文本前的等待时间（毫秒，默认 300ms）。
+    /// </summary>
+    public int FocusRestoreDelayMs { get; set; } = 300;
+
+    /// <summary>
     /// 获取热键显示文本，如 "Ctrl + `"
     /// </summary>
     public string HotkeyDisplayText =>

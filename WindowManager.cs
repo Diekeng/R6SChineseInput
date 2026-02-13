@@ -117,18 +117,25 @@ public class WindowManager
         {
             InputSubmitted?.Invoke(text);
 
+            // 读取配置
+            var config = AppConfig.Load();
+
             // 1. 隐藏 Overlay (InputOverlay 的 KeyDown 中也会 Hide，这里确保顺序)
             _overlay.Hide();
 
             // 2. 归还焦点给游戏窗口
             RestorePreviousWindow();
 
-            // 3. 等待焦点切换完全生效后再发送文本
-            Debug.WriteLine("[WindowManager] 等待 200ms 后发送文本...");
-            await Task.Delay(200);
+            // 3. 等待焦点切换完全生效后再发送文本（使用可配置延迟）
+            Debug.WriteLine($"[WindowManager] 等待 {config.FocusRestoreDelayMs}ms 后发送文本...");
+            await Task.Delay(config.FocusRestoreDelayMs);
 
-            // 4. 发送文本到游戏窗口
-            await TextSender.SendTextAsync(text, delayMs: 0); // 延迟已在上面处理
+            // 4. 发送文本到游戏窗口（带重试机制）
+            await TextSender.SendTextAsync(
+                text,
+                delayMs: 0, // 延迟已在上面处理
+                retryCount: config.RetryCount,
+                retryDelayMs: config.RetryDelayMs);
         }
         catch (Exception ex)
         {

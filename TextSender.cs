@@ -50,8 +50,13 @@ public static class TextSender
 
     /// <summary>
     /// 等待指定延迟后，将文本以 Unicode 字符序列发送到当前前台窗口。
+    /// 支持自动重试：如果 SendInput 未能完整发送所有事件，将自动重试。
     /// </summary>
-    public static async Task SendTextAsync(string text, int delayMs = 50)
+    /// <param name="text">要发送的文本</param>
+    /// <param name="delayMs">发送前等待的毫秒数</param>
+    /// <param name="retryCount">最大重试次数（默认 3）</param>
+    /// <param name="retryDelayMs">重试间隔毫秒数（默认 100）</param>
+    public static async Task SendTextAsync(string text, int delayMs = 50, int retryCount = 3, int retryDelayMs = 100)
     {
         if (string.IsNullOrEmpty(text))
             return;
@@ -64,11 +69,31 @@ public static class TextSender
         var fgWindow = GetForegroundWindow();
         Console.WriteLine($"[TextSender] 当前前台窗口句柄: 0x{fgWindow:X}");
         Console.WriteLine($"[TextSender] INPUT 结构体大小: {Marshal.SizeOf<INPUT>()} 字节");
-        Console.WriteLine($"[TextSender] 开始发送文本 ({text.Length} 个字符): {text}");
 
-        var result = SendUnicodeString(text);
+        uint expectedEvents = (uint)(text.Length * 2); // 每个字符 KEYDOWN + KEYUP
 
-        Console.WriteLine($"[TextSender] 文本发送完成，SendInput 返回: {result}");
+        for (int attempt = 1; attempt <= retryCount + 1; attempt++)
+        {
+            Console.WriteLine($"[TextSender] 第 {attempt} 次尝试发送文本 ({text.Length} 个字符): {text}");
+
+            var sent = SendUnicodeString(text);
+
+            if (sent == expectedEvents)
+            {
+                Console.WriteLine($"[TextSender] ✅ 第 {attempt} 次发送成功: {sent}/{expectedEvents} 个事件");
+                return;
+            }
+
+            Console.WriteLine($"[TextSender] ⚠️ 第 {attempt} 次发送不完整: {sent}/{expectedEvents} 个事件");
+
+            if (attempt <= retryCount)
+            {
+                Console.WriteLine($"[TextSender] 等待 {retryDelayMs}ms 后重试...");
+                await Task.Delay(retryDelayMs);
+            }
+        }
+
+        Console.WriteLine($"[TextSender] ❌ 所有 {retryCount + 1} 次尝试均未完整发送");
     }
 
     /// <summary>

@@ -111,6 +111,64 @@
                 </Grid>
             </StackPanel>
 
+            <!-- 发送设置 -->
+            <Border Grid.Row="2" Background="#30000000" CornerRadius="8"
+                    Margin="14,4,14,4" Padding="10,8">
+                <StackPanel>
+                    <TextBlock Text="⚙️ 发送设置" FontSize="12" FontWeight="Bold"
+                               Foreground="White" Margin="0,0,0,6">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="1" Opacity="0.8"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="重试次数:" FontSize="11"
+                                   Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="1" Opacity="0.8"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBox x:Name="RetryCountBox" Grid.Column="1"
+                                 FontSize="11" Height="24" Padding="4,2"
+                                 Margin="0,0,12,0"
+                                 TextChanged="RetryConfig_TextChanged"/>
+
+                        <TextBlock Grid.Column="2" Text="重试间隔:" FontSize="11"
+                                   Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="1" Opacity="0.8"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBox x:Name="RetryDelayBox" Grid.Column="3"
+                                 FontSize="11" Height="24" Padding="4,2"
+                                 Margin="0,0,12,0"
+                                 ToolTip="毫秒"
+                                 TextChanged="RetryConfig_TextChanged"/>
+
+                        <TextBlock Grid.Column="4" Text="焦点延迟:" FontSize="11"
+                                   Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="1" Opacity="0.8"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBox x:Name="FocusDelayBox" Grid.Column="5"
+                                 FontSize="11" Height="24" Padding="4,2"
+                                 ToolTip="毫秒"
+                                 TextChanged="RetryConfig_TextChanged"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
             <!-- 日志区域 -->
             <Border Grid.Row="3" Background="#40000000" CornerRadius="10"
                     Margin="12,6,12,12" Padding="4">

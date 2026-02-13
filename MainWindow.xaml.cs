@@ -14,6 +14,7 @@ public partial class MainWindow : Window
     private const int MaxLogItems = 200;
     private NotifyIcon? _trayIcon;
     private bool _hotkeyInitialized; // 防止初始化时触发 SelectionChanged
+    private bool _retryConfigInitialized; // 防止初始化时触发 TextChanged
 
     public MainWindow()
     {
@@ -42,6 +43,13 @@ public partial class MainWindow : Window
         SelectComboByName(KeyCombo, config.HotkeyName);
 
         _hotkeyInitialized = true;
+
+        // 填充重试设置
+        RetryCountBox.Text = config.RetryCount.ToString();
+        RetryDelayBox.Text = config.RetryDelayMs.ToString();
+        FocusDelayBox.Text = config.FocusRestoreDelayMs.ToString();
+        _retryConfigInitialized = true;
+
         UpdateStatusText(config);
     }
 
@@ -80,6 +88,24 @@ public partial class MainWindow : Window
         UpdateStatusText(config);
 
         AppendLog($"🔑 热键已更改为: {config.HotkeyDisplayText}");
+    }
+
+    private void RetryConfig_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+    {
+        if (!_retryConfigInitialized) return;
+
+        if (!int.TryParse(RetryCountBox.Text, out var retryCount) || retryCount < 0) return;
+        if (!int.TryParse(RetryDelayBox.Text, out var retryDelay) || retryDelay < 0) return;
+        if (!int.TryParse(FocusDelayBox.Text, out var focusDelay) || focusDelay < 0) return;
+
+        var config = ((App)Application.Current).Config;
+        config.RetryCount = retryCount;
+        config.RetryDelayMs = retryDelay;
+        config.FocusRestoreDelayMs = focusDelay;
+        config.Save();
+
+        ((App)Application.Current).ReloadConfig();
+        AppendLog($"⚙️ 发送设置已更新: 重试{retryCount}次, 间隔{retryDelay}ms, 焦点延迟{focusDelay}ms");
     }
 
     private void UpdateStatusText(AppConfig config)
